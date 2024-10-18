@@ -1,7 +1,6 @@
 const { body, validationResult } = require("express-validator");
 
 const validateUser = async (req, res, next) => {
-  console.log("inside validate user", req.path, req.body);
   await body("email")
     .notEmpty()
     .withMessage("Email is required")

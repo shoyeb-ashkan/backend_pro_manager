@@ -1,4 +1,4 @@
-const registerUser = require("../controllers/registerUSer");
+const registerUser = require("../controllers/registerUser");
 const loginUser = require("../controllers/loginUser");
 const validateUser = require("../middlewares/validateUser");
 const getUserDetails = require("../controllers/getUserDetails");
