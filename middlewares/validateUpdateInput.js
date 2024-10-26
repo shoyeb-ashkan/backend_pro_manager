@@ -1,17 +1,36 @@
 const { body, validationResult } = require("express-validator");
 
-const validateUser = async (req, res, next) => {
+const validateUpdateInput = async (req, res, next) => {
+  for (let key in req.body) {
+    if (!req.body[key]?.trim()) {
+      delete req.body[key];
+    }
+  }
+  // checking if the user has provided a password or new password
+  const hasPassword = !!req.body.password;
+  const hasNewPassword = !!req.body.newPassword;
+
+  if (hasPassword && !hasNewPassword) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Please provide a new password!" }); // if the user has provided a password but not new password
+  }
+
+  if (!hasPassword && hasNewPassword) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Old Password is required!" });
+  }
+
   await body("email")
-    .notEmpty()
-    .withMessage("Email is required")
+    .optional()
     .isEmail()
     .withMessage("Invalid email format")
-    .customSanitizer((value) => value.toLowerCase())
+    .customSanitizer(value => value.toLowerCase())
     .run(req);
 
   await body("password")
-    .notEmpty()
-    .withMessage("Password is required")
+    .optional()
     .trim()
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters long")
@@ -45,4 +64,4 @@ const validateUser = async (req, res, next) => {
   next();
 };
 
-module.exports = validateUser;
+module.exports = validateUpdateInput;

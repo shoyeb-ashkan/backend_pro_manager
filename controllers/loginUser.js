@@ -7,18 +7,32 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
+    if (!user) {
+      return res
+        .status(400)
+        .json({ error: true, message: "Wrong Email or Password" });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!user || !isMatch) {
-      return res.status(400).json({ message: "Wrong Email  or Password" });
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ error: true, message: "Wrong Email or Password" });
     }
 
     const token = await generateToken(user._id);
 
-    return res.status(200).json({ token });
+    return res.status(200).json({
+      token: token,
+      success: true,
+      message: "User Logged in successfully",
+    });
   } catch (error) {
     console.log("Error while logging in user", error);
-    return res.status(500).json({ message: "Error while logging in user" });
+    return res
+      .status(500)
+      .json({ error: true, message: "Error while logging in user" });
   }
 };
 

@@ -3,11 +3,13 @@ const bcrypt = require("bcrypt");
 
 const registerUser = async (req, res) => {
   const { name, email: reqEmail, password } = req.body;
+
   const email = reqEmail.toLowerCase();
   const userExists = await User.findOne({ email });
-
   if (userExists) {
-    return res.status(400).json({ message: "User already exists" });
+    return res
+      .status(400)
+      .json({ error: true, message: "User already exists" });
   }
 
   try {
@@ -19,10 +21,15 @@ const registerUser = async (req, res) => {
     });
 
     await user.save();
-    res.status(201).json({ message: "User registered successfully" });
+    console.log("User registered successfully");
+    return res
+      .status(201)
+      .json({ success: true, message: "User registered successfully" });
   } catch (error) {
     console.log("error while registering user", error);
-    res.status(500).json({ message: "Error while registering user" });
+    res
+      .status(500)
+      .json({ error: true, message: "Error while registering user" });
   }
 };
 

@@ -13,24 +13,46 @@ const taskSchema = new mongoose.Schema(
     },
     dueDate: {
       type: Date,
+      default: null,
     },
-    category: {
+    checklist: {
+      type: [
+        {
+          itemId: {
+            type: String,
+            required: true,
+          },
+          text: {
+            type: String,
+            required: true,
+          },
+          checked: {
+            type: Boolean,
+            default: false,
+          },
+        },
+      ],
+      required: true,
+      validate: {
+        validator: (value) => value && value.length > 0,
+        message: "Checklist must contain at least one item.",
+      },
+    },
+    status: {
       type: String,
       required: true,
-      enum: ["backlog", "in progress", "done", "to-do"],
+      enum: ["backlog", "in-progress", "done", "to-do"],
       default: "to-do",
     },
-    assignTo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
+    assignTo: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-    },
-    isShared: {
-      type: Boolean,
-      default: false,
     },
   },
   { timestamps: true }
