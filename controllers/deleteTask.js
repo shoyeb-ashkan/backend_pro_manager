@@ -11,13 +11,6 @@ const deleteTask = async (req, res) => {
         .json({ error, message: "Task not found", error: true });
     }
 
-    if (task.createdBy.toString() !== userId) {
-      return res.status(403).json({
-        message: "Only the creator can delete the task",
-        error: true,
-      });
-    }
-
     await task.deleteOne();
     return res.status(200).json({
       message: "Task deleted successfully",
