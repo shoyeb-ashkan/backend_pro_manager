@@ -20,13 +20,6 @@ const validateUpdateTask = async (req, res, next) => {
     }
   }
 
-  await body("userEmail")
-    .optional()
-    .isEmail()
-    .withMessage("Invalid email format")
-    .customSanitizer((value) => value.toLowerCase())
-    .run(req);
-
   await body("title")
     .optional()
     .notEmpty()
@@ -115,7 +108,6 @@ const validateUpdateTask = async (req, res, next) => {
 
       const creatorId = req.userId;
 
-      
       if (typeof assignTo === "string") {
         if (!mongoose.Types.ObjectId.isValid(assignTo)) {
           throw new Error("Please provide a valid user ID.");

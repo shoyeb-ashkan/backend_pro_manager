@@ -21,7 +21,7 @@ const getUsers = async (req, res) => {
     console.error("Error searching for users:", error);
     return res
       .status(500)
-      .json({ error: true, message: "Error searching for users:" });
+      .json({ error: true, message: "Error finding Users: Invalid input" });
   }
 };
 

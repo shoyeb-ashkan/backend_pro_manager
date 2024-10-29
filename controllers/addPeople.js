@@ -3,20 +3,9 @@ const User = require("../models/User");
 
 const addPeople = async (req, res) => {
   try {
-    const userId = req.userId;
-    const userEmail = req.body.userEmail.toLowerCase();
+    const { assignTo, userId } = req;
 
-    const assignee = await User.findOne({ email: userEmail });
-
-    if (!assignee) {
-      return res.status(404).json({
-        error: true,
-        message:
-          "Unable to add the assignee. Please verify the email or try again.",
-      });
-    }
-
-    if (assignee._id.toString() === userId.toString()) {
+    if (assignTo === userId) {
       return res.status(401).json({
         error: true,
         message: "You cannot add yourself to the board!",
@@ -33,12 +22,11 @@ const addPeople = async (req, res) => {
 
     await Task.updateMany(
       { createdBy: userId },
-      { $addToSet: { assignTo: assignee._id } }
+      { $addToSet: { assignTo: assignTo } }
     );
 
     return res.status(200).json({
       success: true,
-      data: assignee._id,
       message: "Successfully added people to board!",
     });
   } catch (error) {
@@ -46,7 +34,7 @@ const addPeople = async (req, res) => {
     return res.status(500).json({
       error: true,
       message:
-        "Unable to add the assignee. Please verify the email or try again.",
+        "Unable to add the assignee. Please verify the user or try again.",
     });
   }
 };

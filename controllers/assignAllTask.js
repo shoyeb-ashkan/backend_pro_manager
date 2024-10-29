@@ -5,7 +5,6 @@ const assignAllTask = async (req, res) => {
     const { assignTo, userId } = req;
 
     if (addignTo === req.userId) {
-      a;
       return res.status(401).json({
         error: true,
         message: "you cannot assign task to yourself!",

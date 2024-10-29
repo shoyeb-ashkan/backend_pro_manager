@@ -9,11 +9,22 @@ const PORT = process.env.PORT || 8000;
 // creating app
 const app = express();
 
+const allowedOrigins = [
+  process.env.PRODUCTION_CLIENT_URL,
+  process.env.DEVELOPMENT_CLIENT_URL,
+].filter(Boolean)
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "*",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: "GET, POST, PUT, DELETE",
   })
@@ -42,11 +53,11 @@ function onError(error) {
 
   switch (error.code) {
     case "EACCES":
-      console.error(port + " requires elevated privileges");
+      console.error(PORT + " requires elevated privileges");
       process.exit(1);
       break;
     case "EADDRINUSE":
-      console.error(port + " is already in use");
+      console.error(PORT + " is already in use");
       process.exit(1);
       break;
     default:
