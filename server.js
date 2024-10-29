@@ -9,12 +9,6 @@ const PORT = process.env.PORT || 8000;
 // creating app
 const app = express();
 
-app.use((req, res, next) => {
-  console.log("Request origin:", req.get("origin"));
-  console.log('request var prod', process.env.PRODUCTION_CLIENT_URI)
-  next();
-});
-
 const allowedOrigins = [
   process.env.PRODUCTION_CLIENT_URI,
   process.env.DEVELOPMENT_CLIENT_URI,
