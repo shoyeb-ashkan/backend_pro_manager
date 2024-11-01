@@ -25,7 +25,7 @@ const updateUserDetails = async (req, res) => {
       if (!isMatch) {
         return res
           .status(400)
-          .json({ error: true, message: "Wrong password!" });
+          .json({ error: true, message: "Old password is incorrect!" });
       }
     }
 
